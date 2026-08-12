@@ -112,6 +112,28 @@ void displayEmployee(){
 }
 
 int main(){ 
-    
+    int choice;
+
+    while(true){
+        cout<<"Enter Choice: ";
+        cout<<"1.Add Employee: ";
+        cout<<"2.Display All Employees: ";
+        cout<<"3.Exit";
+
+        switch (choice){
+        case 1:
+            addEmployee();
+            break;
+        case 2:
+            displayEmployee();
+            break;
+        case 3:
+            cout<<"Exiting the Program....";
+            exit(0);
+        default:
+            cout<<"Enter a valid input";
+            break;
+        }
+    }
     return 0;
 }
