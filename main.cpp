@@ -2,6 +2,7 @@
 #include<vector>
 #include<fstream>
 #include<sstream>
+
 using namespace std;
 
 typedef struct{
@@ -64,7 +65,7 @@ void addEmployee(){
         return;
     }
 
-    ptr<<employee.empId<<","<<employee.name<<","<<employee.deptId<<","<<employee.dept<<","<<employee.salary<<endl;
+    ptr << employee.empId << "," << employee.name << "," << employee.deptId << "," << employee.dept << "," << employee.salary << endl;
 
     ptr.close();
 }
@@ -77,7 +78,7 @@ void displayEmployee(){
         return;
     }
 
-    printf("=====Employee Record=====");
+    printf("\n\t\t=====Employee Record=====\n");
     cout<<"ID\tName\tDepartment ID\tDepartment\tSalary\n";
     cout<<"-----------------------------------------------------------------\n";
 
@@ -114,11 +115,14 @@ void displayEmployee(){
 int main(){ 
     int choice;
 
-    while(true){
-        cout<<"Enter Choice: ";
-        cout<<"1.Add Employee: ";
-        cout<<"2.Display All Employees: ";
-        cout<<"3.Exit";
+
+    while(1){
+        cout<<"\n\n===Modi ji MantriMandal Management System===\n";
+        cout<<"1.Add Employee: \n";
+        cout<<"2.Display All Employees: \n";
+        cout<<"3.Exit\n";
+        cout<<"Enter Your Choice: ";
+        cin>>choice;
 
         switch (choice){
         case 1:
@@ -129,11 +133,10 @@ int main(){
             break;
         case 3:
             cout<<"Exiting the Program....";
-            exit(0);
+            return 0;
         default:
             cout<<"Enter a valid input";
             break;
         }
     }
-    return 0;
 }
