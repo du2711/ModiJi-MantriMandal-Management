@@ -1,6 +1,7 @@
 #include<iostream>
 #include<vector>
-
+#include<fstream>
+#include<sstream>
 using namespace std;
 
 typedef struct{
@@ -22,9 +23,9 @@ typedef struct{
 }deptName;
 
 void addEmployee(){
-    FILE *ptr=fopen("employee.csv","a");
+    ofstream ptr("employee.csv",ios::app);
 
-    if(ptr==NULL) {
+    if(!ptr) {
         cout<<"Error in opening file";
         return;
     }
@@ -59,38 +60,58 @@ void addEmployee(){
         break;
     default:
         cout<<"Enter valid Department";
-        fclose(ptr);
+        ptr.close();
         return;
     }
 
-    fprintf(ptr, "%d,%s,%d,%s,%d\n",employee.empId,employee.name.c_str(),employee.deptId,employee.dept.c_str(),employee.salary);
+    ptr<<employee.empId<<","<<employee.name<<","<<employee.deptId<<","<<employee.dept<<","<<employee.salary<<endl;
 
-    fclose(ptr);
+    ptr.close();
 }
 
 void displayEmployee(){
-    FILE* ptr=fopen("employee.csv","r");
+    ifstream ptr("employee.csv",ios::in);
 
-    if(ptr==NULL) {
+    if(!ptr) {
         cout<<"Error in opening file";
         return;
     }
 
-    emp employee;
-
     printf("=====Employee Record=====");
-    cout<<"ID       Name        Department ID       Department      Salary\n";
+    cout<<"ID\tName\tDepartment ID\tDepartment\tSalary\n";
     cout<<"-----------------------------------------------------------------\n";
 
-    // while(fscanf("%d,%[^,],%d,%[^,],%d",&employee.empId,employee.name,&employee.deptId,employee.dept,&employee.salary)){
-    //     cout<<("%d       %s      %d      %s      %d\n",employee.empId,employee.name.c_str(),employee.deptId,employee.dept.c_str(),employee.salary);
-    // }
+    emp employee;
+    string line;
+    string temp;
 
-    fclose(ptr);
+    while(getline(ptr,line)){
+        stringstream ss(line);
+
+        getline(ss,temp,',');
+        employee.empId=stoi(temp);
+
+        getline(ss,employee.name,',');
+
+        getline(ss,temp,',');
+        employee.deptId=stoi(temp);
+
+        getline(ss,employee.dept,',');
+
+        getline(ss,temp,',');
+        employee.salary=stoi(temp);
+
+        cout << employee.empId << "\t"
+            << employee.name << "\t"
+            << employee.deptId << "\t\t"
+            << employee.dept << "\t\t"
+            << employee.salary << "\n";
+    }
+
+    ptr.close();
 }
 
 int main(){ 
-    addEmployee();
-    cout<<"Employee Added Successfully";
+    
     return 0;
 }
