@@ -179,13 +179,12 @@ void deleteEmployee(){
 
 int main(){ 
     int choice;
-
-
     while(1){
         cout<<"\n\n===Modi ji MantriMandal Management System===\n";
         cout<<"1.Add Employee: \n";
         cout<<"2.Display All Employees: \n";
-        cout<<"3.Exit\n";
+        cout<<"3.Delete Employee\n";
+        cout<<"4.Exit\n";
         cout<<"Enter Your Choice: ";
         cin>>choice;
 
@@ -197,6 +196,9 @@ int main(){
             displayEmployee();
             break;
         case 3:
+            deleteEmployee();
+            break;
+        case 4:
             cout<<"Exiting the Program....";
             return 0;
         default:
