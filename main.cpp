@@ -26,7 +26,8 @@ typedef struct{
 
 bool employeeExist(int id){
     ifstream ptr("employee.csv");
-    emp employee;
+
+    if(!ptr) return false;
 
     string line,temp;
 
