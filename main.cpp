@@ -207,17 +207,17 @@ void updateEmployee(){
     while(getline(ptr,line)){
         stringstream ss(line);
 
-        getline(ss,tempdata,",");
+        getline(ss,tempdata,',');
         employee.empId=stoi(tempdata);
 
-        getline(ss,employee.name,",");
+        getline(ss,employee.name,',');
 
-        getline(ss,tempdata,",");
+        getline(ss,tempdata,',');
         employee.deptId=stoi(tempdata);
 
-        getline(ss,employee.dept,",");
+        getline(ss,employee.dept,',');
 
-        getline(ss,tempdata,",");
+        getline(ss,tempdata,',');
         employee.salary=stoi(tempdata);
 
         if(edit==employee.empId){
@@ -283,7 +283,8 @@ int main(){
         cout<<"1.Add Employee: \n";
         cout<<"2.Display All Employees: \n";
         cout<<"3.Delete Employee\n";
-        cout<<"4.Exit\n";
+        cout<<"4.Update Employee Details\n";
+        cout<<"5.Exit\n";
         cout<<"Enter Your Choice: ";
         cin>>choice;
 
@@ -298,6 +299,9 @@ int main(){
             deleteEmployee();
             break;
         case 4:
+            updateEmployee();
+            break;
+        case 5:
             cout<<"Exiting the Program....";
             return 0;
         default:
