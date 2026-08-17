@@ -81,7 +81,7 @@ void displayEmployee(){
 
     printf("\n\t\t=====Mantri-Mandal Record=====\n");
     cout<<"ID\tName\t\t\tDepartment ID\t\tDepartment\tSalary\n";
-    cout<<"-----------------------------------------------------------------\n";
+    cout<<"-------------------------------------------------------------------------------\n";
 
     emp employee;
     string line;
