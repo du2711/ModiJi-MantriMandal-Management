@@ -276,6 +276,58 @@ void updateEmployee(){
     }
 }
 
+void searchEmployee(){
+    ifstream ptr("employee.csv");
+
+    if(!ptr){
+        cout<<"Error in opening File";
+        return;
+    }
+
+    emp employee;
+
+    int empid;
+    cout<<"Enter Employee Id";
+    cin>>empid;
+
+    string line,temp;
+    bool found=false;
+
+    while(getline(ptr,line)){
+        stringstream ss(line);
+
+        getline(ss,temp,',');
+        employee.empId=stoi(temp);
+
+        getline(ss,employee.name,',');
+
+        getline(ss,temp,',');
+        employee.deptId=stoi(temp);
+
+        getline(ss,employee.dept,',');
+
+        getline(ss,temp,',');
+        employee.salary=stoi(temp);
+
+        if(employee.empId==empid){
+            found=true;
+            printf("\n\t\t=====Mantri-Mandal Record=====\n");
+            cout<<"ID\tName\t\t\tDepartment ID\t\tDepartment\tSalary\n";
+            cout<<"-------------------------------------------------------------------------------\n";
+
+            cout <<employee.empId << "\t"
+            << employee.name << "\t\t"
+            << employee.deptId << "\t\t\t"
+            << employee.dept << "\t\t"
+            << employee.salary << "\n";
+
+            break;
+        }
+    }
+    if(!found) cout<<"Employee not found";
+    ptr.close();
+}
+
 int main(){ 
     int choice;
     while(1){
