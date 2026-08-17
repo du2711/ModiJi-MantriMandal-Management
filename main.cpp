@@ -287,7 +287,7 @@ void searchEmployee(){
     emp employee;
 
     int empid;
-    cout<<"Enter Employee Id";
+    cout<<"Enter Employee Id: ";
     cin>>empid;
 
     string line,temp;
@@ -331,12 +331,13 @@ void searchEmployee(){
 int main(){ 
     int choice;
     while(1){
-        cout<<"\n===Modi ji MantriMandal Management System===\n";
+        cout<<"\n==Modi ji MantriMandal Management System==\n\n";
         cout<<"1.Add Employee: \n";
         cout<<"2.Display All Employees: \n";
         cout<<"3.Delete Employee\n";
         cout<<"4.Update Employee Details\n";
-        cout<<"5.Exit\n";
+        cout<<"5.Search Employee Details\n";
+        cout<<"6.Exit\n\n";
         cout<<"Enter Your Choice: ";
         cin>>choice;
 
@@ -354,6 +355,9 @@ int main(){
             updateEmployee();
             break;
         case 5:
+            searchEmployee();
+            break;
+        case 6:
             cout<<"Exiting the Program....";
             return 0;
         default:
