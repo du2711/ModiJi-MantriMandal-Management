@@ -24,6 +24,24 @@ typedef struct{
     string Marketing="Marketing";
 }deptName;
 
+bool employeeExist(int id){
+    ifstream ptr("employee.csv");
+    emp employee;
+
+    string line,temp;
+
+    while(getline(ptr,line)){
+        stringstream ss(line);
+
+        getline(ss,temp,',');
+        int existId=stoi(temp);
+
+        if(existId==id) return true;
+    }
+
+    return false;
+}
+
 void addEmployee(){
     ofstream ptr("employee.csv",ios::app);
 
@@ -37,6 +55,10 @@ void addEmployee(){
 
     cout<<"Enter Employee ID: ";
     cin>>employee.empId;
+    if(employeeExist(employee.empId)){
+        cout<<"Employee alraedy exists";
+        return;
+    }
     cout<<"Enter Employee Name: ";
     cin>>employee.name;
     cout<<"Enter Department ID: ";
