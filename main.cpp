@@ -79,8 +79,8 @@ void displayEmployee(){
         return;
     }
 
-    printf("\n\t\t=====Employee Record=====\n");
-    cout<<"ID\tName\tDepartment ID\tDepartment\tSalary\n";
+    printf("\n\t\t=====Mantri-Mandal Record=====\n");
+    cout<<"ID\tName\t\t\tDepartment ID\t\tDepartment\tSalary\n";
     cout<<"-----------------------------------------------------------------\n";
 
     emp employee;
@@ -104,8 +104,8 @@ void displayEmployee(){
         employee.salary=stoi(temp);
 
         cout <<employee.empId << "\t"
-            << employee.name << "\t"
-            << employee.deptId << "\t\t"
+            << employee.name << "\t\t"
+            << employee.deptId << "\t\t\t"
             << employee.dept << "\t\t"
             << employee.salary << "\n";
     }
@@ -167,12 +167,12 @@ void deleteEmployee(){
     temp.close();
 
     if(found){
-        cout<<"Employee Deleted Successfully";
+        cout<<"Employee Deleted Successfully\n";
         remove("employee.csv");
         rename("temp.csv","employee.csv");
     }
     else {
-        cout<<"Employee not found";
+        cout<<"Employee not found\n";
         remove("temp.csv");
     }
 }
@@ -180,7 +180,7 @@ void deleteEmployee(){
 int main(){ 
     int choice;
     while(1){
-        cout<<"\n\n===Modi ji MantriMandal Management System===\n";
+        cout<<"\n===Modi ji MantriMandal Management System===\n";
         cout<<"1.Add Employee: \n";
         cout<<"2.Display All Employees: \n";
         cout<<"3.Delete Employee\n";
