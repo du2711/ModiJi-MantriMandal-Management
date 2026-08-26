@@ -1,6 +1,6 @@
 # Employee Management System (EMS)
 
-> Repository: `ModijiMantriMandalManagement`
+> Repository: `ModijiMantriMandalManagement` 😭
 
 A C++ based Employee Management System designed to manage employee records through a console-based application. The project is being developed as a long-term major project and will gradually evolve into a complete full-stack system.
 
