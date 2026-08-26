@@ -44,7 +44,7 @@ System that can handle:
 
 ## Development Roadmap
 
-### Phase 1 — C++ Foundation
+### Phase 1 — C++ Foundation --✅ Completed
 - [ ] Classes and Objects
 - [ ] Encapsulation
 - [ ] Constructors
@@ -53,7 +53,7 @@ System that can handle:
 - [ ] STL
 - [ ] File Handling
 
-### Phase 2 — Core Employee Management
+### Phase 2 — Core Employee Management --✅ Completed
 - [ ] Add Employee
 - [ ] Display Employees
 - [ ] Search Employee
@@ -62,9 +62,9 @@ System that can handle:
 - [ ] Employee ID management
 - [ ] Data validation
 
-### Phase 3 — Data Management
-- [ ] File-based storage
-- [ ] CSV support
+### Phase 3 — Data Management -- Work in progress
+- [ ] File-based storage ✅
+- [ ] CSV support ✅
 - [ ] Database integration
 - [ ] Employee records persistence
 
