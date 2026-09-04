@@ -1,5 +1,4 @@
 #include "EmployeeManager.h"
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -8,33 +7,19 @@
 using namespace std;
 
 string EmployeeManager::getDepartment(int deptId) {
-
     switch (deptId) {
-        case 1011:
-            return "IT";
-
-        case 1012:
-            return "Sales";
-
-        case 1013:
-            return "HR";
-
-        case 1014:
-            return "Finance";
-
-        case 1015:
-            return "Marketing";
-
-        default:
-            return "";
+        case 1011: return "IT";
+        case 1012: return "Sales";
+        case 1013: return "HR";
+        case 1014: return "Finance";
+        case 1015: return "Marketing";
+        default: return "";
     }
 }
 
 Employee EmployeeManager::parseEmployee(string line) {
-
     stringstream ss(line);
     string temp;
-
     Employee employee;
 
     getline(ss, temp, ',');
@@ -56,7 +41,6 @@ Employee EmployeeManager::parseEmployee(string line) {
 }
 
 void EmployeeManager::printEmployee(const Employee& employee) {
-
     cout << employee.getEmpId() << "\t"
          << employee.getName() << "\t\t"
          << employee.getDeptId() << "\t\t"
@@ -65,15 +49,13 @@ void EmployeeManager::printEmployee(const Employee& employee) {
 }
 
 bool EmployeeManager::employeeExists(int id) {
-
     ifstream file(fileName);
-
-    if (!file)
-        return false;
+    if (!file) return false;
 
     string line;
 
     while (getline(file, line)) {
+        if (line.empty()) continue;
 
         Employee employee = parseEmployee(line);
 
@@ -84,14 +66,160 @@ bool EmployeeManager::employeeExists(int id) {
     return false;
 }
 
+vector<Employee> EmployeeManager::getAllEmployees() {
+    vector<Employee> employees;
+    ifstream file(fileName);
+
+    if (!file) return employees;
+
+    string line;
+
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+        employees.push_back(parseEmployee(line));
+    }
+
+    return employees;
+}
+
+bool EmployeeManager::getEmployeeById(int id, Employee& employee) {
+    ifstream file(fileName);
+    if (!file) return false;
+
+    string line;
+
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+
+        Employee currentEmployee = parseEmployee(line);
+
+        if (currentEmployee.getEmpId() == id) {
+            employee = currentEmployee;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool EmployeeManager::addEmployee(const Employee& employee) {
+    if (employeeExists(employee.getEmpId()))
+        return false;
+
+    string department = getDepartment(employee.getDeptId());
+
+    if (department.empty())
+        return false;
+
+    ofstream file(fileName, ios::app);
+
+    if (!file)
+        return false;
+
+    file << employee.getEmpId() << ","
+         << employee.getName() << ","
+         << employee.getDeptId() << ","
+         << department << ","
+         << employee.getSalary() << "\n";
+
+    return true;
+}
+
+bool EmployeeManager::updateEmployee(const Employee& updatedEmployee) {
+    ifstream file(fileName);
+    if (!file) return false;
+
+    string department = getDepartment(updatedEmployee.getDeptId());
+
+    if (department.empty())
+        return false;
+
+    ofstream tempFile("temp.csv");
+    if (!tempFile) return false;
+
+    string line;
+    bool found = false;
+
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+
+        Employee employee = parseEmployee(line);
+
+        if (employee.getEmpId() == updatedEmployee.getEmpId()) {
+            found = true;
+
+            tempFile << updatedEmployee.getEmpId() << ","
+                     << updatedEmployee.getName() << ","
+                     << updatedEmployee.getDeptId() << ","
+                     << department << ","
+                     << updatedEmployee.getSalary() << "\n";
+        } else {
+            tempFile << employee.getEmpId() << ","
+                     << employee.getName() << ","
+                     << employee.getDeptId() << ","
+                     << employee.getDept() << ","
+                     << employee.getSalary() << "\n";
+        }
+    }
+
+    file.close();
+    tempFile.close();
+
+    if (!found) {
+        remove("temp.csv");
+        return false;
+    }
+
+    remove(fileName.c_str());
+    rename("temp.csv", fileName.c_str());
+
+    return true;
+}
+
+bool EmployeeManager::deleteEmployee(int id) {
+    ifstream file(fileName);
+    if (!file) return false;
+
+    ofstream tempFile("temp.csv");
+    if (!tempFile) return false;
+
+    string line;
+    bool found = false;
+
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+
+        Employee employee = parseEmployee(line);
+
+        if (employee.getEmpId() == id) {
+            found = true;
+            continue;
+        }
+
+        tempFile << employee.getEmpId() << ","
+                 << employee.getName() << ","
+                 << employee.getDeptId() << ","
+                 << employee.getDept() << ","
+                 << employee.getSalary() << "\n";
+    }
+
+    file.close();
+    tempFile.close();
+
+    if (!found) {
+        remove("temp.csv");
+        return false;
+    }
+
+    remove(fileName.c_str());
+    rename("temp.csv", fileName.c_str());
+
+    return true;
+}
+
 void EmployeeManager::addEmployee() {
-
-    Employee employee;
-
-    int id;
+    int id, deptId, salary;
     string name;
-    int deptId;
-    int salary;
 
     cout << "Enter Employee ID: ";
     cin >> id;
@@ -109,9 +237,9 @@ void EmployeeManager::addEmployee() {
     cout << "Enter Department ID: ";
     cin >> deptId;
 
-    string dept = getDepartment(deptId);
+    string department = getDepartment(deptId);
 
-    if (dept.empty()) {
+    if (department.empty()) {
         cout << "Invalid Department ID\n";
         return;
     }
@@ -119,231 +247,100 @@ void EmployeeManager::addEmployee() {
     cout << "Enter Salary: ";
     cin >> salary;
 
-    employee.setEmpId(id);
-    employee.setName(name);
-    employee.setDeptId(deptId);
-    employee.setDept(dept);
-    employee.setSalary(salary);
+    Employee employee(id, name, deptId, department, salary);
 
-    ofstream file(fileName, ios::app);
-
-    if (!file) {
-        cout << "Error opening file\n";
-        return;
-    }
-
-    file << employee.getEmpId() << ","
-         << employee.getName() << ","
-         << employee.getDeptId() << ","
-         << employee.getDept() << ","
-         << employee.getSalary() << "\n";
-
-    cout << "Employee added successfully\n";
+    if (addEmployee(employee))
+        cout << "Employee added successfully\n";
+    else
+        cout << "Unable to add employee\n";
 }
 
 void EmployeeManager::displayEmployees() {
+    vector<Employee> employees = getAllEmployees();
 
-    ifstream file(fileName);
-
-    if (!file) {
-        cout << "Error opening file\n";
+    if (employees.empty()) {
+        cout << "No employee records found\n";
         return;
     }
 
     cout << "\n===== Employee Records =====\n";
-
     cout << "ID\tName\t\tDepartment ID\tDepartment\tSalary\n";
-
     cout << "---------------------------------------------------------------\n";
 
-    string line;
-
-    while (getline(file, line)) {
-
-        Employee employee = parseEmployee(line);
-
+    for (const Employee& employee : employees)
         printEmployee(employee);
-    }
 }
 
 void EmployeeManager::deleteEmployee() {
-
-    ifstream file(fileName);
-
-    if (!file) {
-        cout << "Error opening file\n";
-        return;
-    }
-
     int id;
 
     cout << "Enter Employee ID to delete: ";
     cin >> id;
 
-    ofstream tempFile("temp.csv");
-
-    string line;
-    bool found = false;
-
-    while (getline(file, line)) {
-
-        Employee employee = parseEmployee(line);
-
-        if (employee.getEmpId() != id) {
-
-            tempFile << employee.getEmpId() << ","
-                     << employee.getName() << ","
-                     << employee.getDeptId() << ","
-                     << employee.getDept() << ","
-                     << employee.getSalary() << "\n";
-
-        } else {
-            found = true;
-        }
-    }
-
-    file.close();
-    tempFile.close();
-
-    if (found) {
-
-        remove(fileName.c_str());
-        rename("temp.csv", fileName.c_str());
-
+    if (deleteEmployee(id))
         cout << "Employee deleted successfully\n";
-
-    } else {
-
-        remove("temp.csv");
-
+    else
         cout << "Employee not found\n";
-    }
 }
 
 void EmployeeManager::updateEmployee() {
-
-    ifstream file(fileName);
-
-    if (!file) {
-        cout << "Error opening file\n";
-        return;
-    }
-
     int id;
 
     cout << "Enter Employee ID: ";
     cin >> id;
 
-    ofstream tempFile("temp.csv");
+    Employee oldEmployee;
 
-    string line;
-    bool found = false;
-
-    while (getline(file, line)) {
-
-        Employee employee = parseEmployee(line);
-
-        if (employee.getEmpId() == id) {
-
-            found = true;
-
-            string name;
-            int deptId;
-            int salary;
-
-            cin.ignore();
-
-            cout << "Enter Employee Name: ";
-            getline(cin, name);
-
-            cout << "Enter Department ID: ";
-            cin >> deptId;
-
-            string dept = getDepartment(deptId);
-
-            if (dept.empty()) {
-
-                cout << "Invalid Department ID\n";
-
-                file.close();
-                tempFile.close();
-
-                remove("temp.csv");
-
-                return;
-            }
-
-            cout << "Enter Salary: ";
-            cin >> salary;
-
-            employee.setName(name);
-            employee.setDeptId(deptId);
-            employee.setDept(dept);
-            employee.setSalary(salary);
-        }
-
-        tempFile << employee.getEmpId() << ","
-                 << employee.getName() << ","
-                 << employee.getDeptId() << ","
-                 << employee.getDept() << ","
-                 << employee.getSalary() << "\n";
-    }
-
-    file.close();
-    tempFile.close();
-
-    if (found) {
-
-        remove(fileName.c_str());
-        rename("temp.csv", fileName.c_str());
-
-        cout << "Employee details updated successfully\n";
-
-    } else {
-
-        remove("temp.csv");
-
+    if (!getEmployeeById(id, oldEmployee)) {
         cout << "Employee not found\n";
+        return;
     }
+
+    string name;
+    int deptId, salary;
+
+    cin.ignore();
+
+    cout << "Enter Employee Name: ";
+    getline(cin, name);
+
+    cout << "Enter Department ID: ";
+    cin >> deptId;
+
+    string department = getDepartment(deptId);
+
+    if (department.empty()) {
+        cout << "Invalid Department ID\n";
+        return;
+    }
+
+    cout << "Enter Salary: ";
+    cin >> salary;
+
+    Employee updatedEmployee(id, name, deptId, department, salary);
+
+    if (updateEmployee(updatedEmployee))
+        cout << "Employee details updated successfully\n";
+    else
+        cout << "Unable to update employee\n";
 }
 
 void EmployeeManager::searchEmployee() {
-
-    ifstream file(fileName);
-
-    if (!file) {
-        cout << "Error opening file\n";
-        return;
-    }
-
     int id;
 
     cout << "Enter Employee ID: ";
     cin >> id;
 
-    string line;
-    bool found = false;
+    Employee employee;
 
-    while (getline(file, line)) {
-
-        Employee employee = parseEmployee(line);
-
-        if (employee.getEmpId() == id) {
-
-            cout << "\n===== Employee Record =====\n";
-
-            cout << "ID\tName\t\tDepartment ID\tDepartment\tSalary\n";
-
-            cout << "---------------------------------------------------------------\n";
-
-            printEmployee(employee);
-
-            found = true;
-
-            break;
-        }
+    if (!getEmployeeById(id, employee)) {
+        cout << "Employee not found\n";
+        return;
     }
 
-    if (!found)
-        cout << "Employee not found\n";
+    cout << "\n===== Employee Record =====\n";
+    cout << "ID\tName\t\tDepartment ID\tDepartment\tSalary\n";
+    cout << "---------------------------------------------------------------\n";
+
+    printEmployee(employee);
 }
