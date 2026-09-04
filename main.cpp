@@ -6,23 +6,23 @@
 
 using namespace std;
 
-typedef struct{
-    public:
+class emp{
+public:
     int empId;
     string name;
     int deptId;
     string dept;
     int salary;
-}emp;
+};
 
-typedef struct{
-    public:
+class deptName{
+public:
     string IT="IT";
     string Sales="Sales";
     string HR="HR";
     string Finance="Finance";
     string Marketing="Marketing";
-}deptName;
+};
 
 bool employeeExist(int id){
     ifstream ptr("employee.csv");
