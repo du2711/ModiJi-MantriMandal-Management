@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Employee Management System</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">EM</div>
+
+            <div>
+                <h2>Employee</h2>
+                <span>Management</span>
+            </div>
+        </div>
+
+        <nav>
+
+            <a href="#" class="nav-item active">
+                <span>⌂</span>
+                Dashboard
+            </a>
+
+            <a href="#employees" class="nav-item">
+                <span>👥</span>
+                Employees
+            </a>
+
+            <a href="#add" class="nav-item">
+                <span>＋</span>
+                Add Employee
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+                <h1>Dashboard</h1>
+                <p>Employee Management System</p>
+            </div>
+
+            <div class="profile">
+
+                <div class="avatar">
+                    A
+                </div>
+
+                <div class="profile-info">
+                    <strong>Admin</strong>
+                    <span>Administrator</span>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Dashboard -->
+
+        <section class="stats">
+
+            <div class="stat-card">
+
+                <div class="stat-icon blue">
+                    👥
+                </div>
+
+                <div>
+                    <span>Total Employees</span>
+                    <h2 id="totalEmployees">0</h2>
+                    <small>From employee.csv</small>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon purple">
+                    ▦
+                </div>
+
+                <div>
+                    <span>Departments</span>
+                    <h2 id="totalDepartments">0</h2>
+                    <small>Active departments</small>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon green">
+                    ₹
+                </div>
+
+                <div>
+                    <span>Average Salary</span>
+                    <h2 id="averageSalary">₹0</h2>
+                    <small>Calculated from CSV</small>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon orange">
+                    ★
+                </div>
+
+                <div>
+                    <span>Highest Salary</span>
+                    <h2 id="highestSalary">₹0</h2>
+                    <small>Highest paid employee</small>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Employees -->
+
+        <section class="employee-section" id="employees">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>Employees</h2>
+                    <p>Live data from employee.csv</p>
+                </div>
+
+                <button class="add-btn" id="addEmployeeBtn">
+                    + Add Employee
+                </button>
+
+            </div>
+
+
+            <div class="toolbar">
+
+                <div class="search-box">
+
+                    <span>⌕</span>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search employee by name or ID..."
+                    >
+
+                </div>
+
+
+                <select id="departmentFilter">
+
+                    <option value="all">
+                        All Departments
+                    </option>
+
+                    <option value="IT">
+                        IT
+                    </option>
+
+                    <option value="Sales">
+                        Sales
+                    </option>
+
+                    <option value="HR">
+                        HR
+                    </option>
+
+                    <option value="Finance">
+                        Finance
+                    </option>
+
+                    <option value="Marketing">
+                        Marketing
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Employee</th>
+
+                            <th>Department ID</th>
+
+                            <th>Department</th>
+
+                            <th>Salary</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <!-- JS will load CSV data here -->
+
+                    <tbody id="employeeTableBody">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- Loading -->
+
+        <div id="loadingMessage">
+            Loading employees...
+        </div>
+
+
+        <!-- Error -->
+
+        <div id="errorMessage"></div>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

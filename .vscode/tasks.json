@@ -1,0 +1,24 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Build Employee Management System",
+            "command": "g++",
+            "args": [
+                "backend/main.cpp",
+                "backend/Employee.cpp",
+                "backend/EmployeeManager.cpp",
+                "-o",
+                "backend/main.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        }
+    ]
+}
