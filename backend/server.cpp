@@ -10,6 +10,28 @@ int main() {
     EmployeeManager manager;
     httplib::Server server;
 
+    // CORS
+    server.set_pre_routing_handler(
+        [](const httplib::Request& req, httplib::Response& res) {
+
+            res.set_header("Access-Control-Allow-Origin", "*");
+            res.set_header(
+                "Access-Control-Allow-Methods",
+                "GET, POST, PUT, DELETE, OPTIONS"
+            );
+            res.set_header(
+                "Access-Control-Allow-Headers",
+                "Content-Type"
+            );
+
+            if (req.method == "OPTIONS")
+                return httplib::Server::HandlerResponse::Handled;
+
+            return httplib::Server::HandlerResponse::Unhandled;
+        }
+    );
+
+    // GET all employees
     server.Get("/employees", [&](const httplib::Request& req,
                                  httplib::Response& res) {
 
@@ -19,6 +41,7 @@ int main() {
         json << "[";
 
         for (size_t i = 0; i < employees.size(); i++) {
+
             const Employee& employee = employees[i];
 
             json << "{"
@@ -35,8 +58,163 @@ int main() {
 
         json << "]";
 
-        res.set_content(json.str(), "application/json");
+        res.set_content(
+            json.str(),
+            "application/json"
+        );
     });
+
+    // POST - Add employee
+    server.Post("/employees", [&](const httplib::Request& req,
+                                httplib::Response& res) {
+
+        try {
+            string body = req.body;
+
+            auto getValue = [&](string key) {
+                string search = "\"" + key + "\":";
+                size_t start = body.find(search);
+
+                if (start == string::npos)
+                    return string("");
+
+                start += search.length();
+
+                while (start < body.length() && body[start] == ' ')
+                    start++;
+
+                if (body[start] == '"') {
+                    start++;
+
+                    size_t end = body.find('"', start);
+
+                    return body.substr(start, end - start);
+                }
+
+                size_t end = body.find_first_of(",}", start);
+
+                return body.substr(start, end - start);
+            };
+
+            int empId = stoi(getValue("empId"));
+            string name = getValue("name");
+            int deptId = stoi(getValue("deptId"));
+            int salary = stoi(getValue("salary"));
+
+            Employee employee(
+                empId,
+                name,
+                deptId,
+                "",
+                salary
+            );
+
+            if (!manager.addEmployee(employee)) {
+
+                res.status = 400;
+
+                res.set_content(
+                    "{\"success\":false,\"message\":\"Unable to add employee\"}",
+                    "application/json"
+                );
+
+                return;
+            }
+
+            res.status = 201;
+
+            res.set_content(
+                "{\"success\":true,\"message\":\"Employee added successfully\"}",
+                "application/json"
+            );
+
+        } catch (...) {
+
+            res.status = 400;
+
+            res.set_content(
+                "{\"success\":false,\"message\":\"Invalid employee data\"}",
+                "application/json"
+            );
+        }
+    });
+
+    // PUT - Update employee
+server.Put(R"(/employees/(\d+))",
+    [&](const httplib::Request& req, httplib::Response& res) {
+
+        try {
+            int empId = stoi(req.matches[1]);
+
+            string body = req.body;
+
+            auto getValue = [&](string key) {
+                string search = "\"" + key + "\":";
+                size_t start = body.find(search);
+
+                if (start == string::npos)
+                    return string("");
+
+                start += search.length();
+
+                while (start < body.length() && body[start] == ' ')
+                    start++;
+
+                if (body[start] == '"') {
+                    start++;
+
+                    size_t end = body.find('"', start);
+
+                    return body.substr(start, end - start);
+                }
+
+                size_t end = body.find_first_of(",}", start);
+
+                return body.substr(start, end - start);
+            };
+
+            string name = getValue("name");
+            int deptId = stoi(getValue("deptId"));
+            int salary = stoi(getValue("salary"));
+
+            Employee employee(
+                empId,
+                name,
+                deptId,
+                "",
+                salary
+            );
+
+            if (!manager.updateEmployee(employee)) {
+
+                res.status = 404;
+
+                res.set_content(
+                    "{\"success\":false,\"message\":\"Employee not found or update failed\"}",
+                    "application/json"
+                );
+
+                return;
+            }
+
+            res.status = 200;
+
+            res.set_content(
+                "{\"success\":true,\"message\":\"Employee updated successfully\"}",
+                "application/json"
+            );
+
+        } catch (...) {
+
+            res.status = 400;
+
+            res.set_content(
+                "{\"success\":false,\"message\":\"Invalid employee data\"}",
+                "application/json"
+            );
+        }
+    }
+);
 
     cout << "Employee Management API running...\n";
     cout << "Server: http://localhost:8080\n";

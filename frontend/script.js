@@ -241,120 +241,52 @@ function updateStats() {
 // ==========================================
 
 async function addEmployee() {
+    const empId = prompt("Enter Employee ID:");
+    if (empId === null) return;
 
-    const empId =
-        Number(prompt("Enter Employee ID:"));
+    const name = prompt("Enter Employee Name:");
+    if (name === null) return;
 
+    const deptId = prompt(
+        "Enter Department ID:\n1011 - IT\n1012 - Sales\n1013 - HR\n1014 - Finance\n1015 - Marketing"
+    );
+    if (deptId === null) return;
 
-    if (!empId) {
-        return;
-    }
+    const salary = prompt("Enter Salary:");
+    if (salary === null) return;
 
-
-    const existingEmployee =
-        employees.some(
-            employee => employee.empId === empId
-        );
-
-
-    if (existingEmployee) {
-
-        alert("Employee with this ID already exists.");
-
-        return;
-    }
-
-
-    const name =
-        prompt("Enter Employee Name:");
-
-
-    if (!name || name.trim() === "") {
-        return;
-    }
-
-
-    const deptId =
-        Number(
-            prompt(
-                "Enter Department ID:\n\n" +
-                "1011 - IT\n" +
-                "1012 - Sales\n" +
-                "1013 - HR\n" +
-                "1014 - Finance\n" +
-                "1015 - Marketing"
-            )
-        );
-
-
-    if (!isValidDepartment(deptId)) {
-
-        alert("Invalid Department ID.");
-
-        return;
-    }
-
-
-    const salary =
-        Number(prompt("Enter Salary:"));
-
-
-    if (!salary || salary < 0) {
-
-        alert("Invalid salary.");
-
-        return;
-    }
-
-
-    const newEmployee = {
-
-        empId: empId,
-
-        name: name.trim(),
-
-        deptId: deptId,
-
-        salary: salary
+    const employee = {
+        empId: Number(empId),
+        name: name,
+        deptId: Number(deptId),
+        salary: Number(salary)
     };
 
-
     try {
+        showLoading(true);
 
-        const response = await fetch(
-            `${API_URL}/employees`,
-            {
-                method: "POST",
+        const response = await fetch(`${API_URL}/employees`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(employee)
+        });
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify(newEmployee)
-            }
-        );
-
+        const result = await response.json();
 
         if (!response.ok) {
-
-            throw new Error(
-                "Failed to add employee"
-            );
+            throw new Error(result.message || "Unable to add employee");
         }
 
-
-        alert("Employee added successfully.");
+        alert("Employee added successfully!");
 
         await loadEmployees();
 
-
     } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "Unable to add employee. Check the backend."
-        );
+        showError(error.message);
+    } finally {
+        showLoading(false);
     }
 }
 
@@ -364,121 +296,66 @@ async function addEmployee() {
 // ==========================================
 
 async function editEmployee(id) {
-
-    const employee =
-        employees.find(
-            employee => employee.empId === id
-        );
-
+    const employee = employees.find(emp => emp.empId === id);
 
     if (!employee) {
+        showError("Employee not found");
         return;
     }
 
+    const name = prompt("Enter Employee Name:", employee.name);
+    if (name === null) return;
 
-    const name =
-        prompt(
-            "Enter Employee Name:",
-            employee.name
-        );
+    const deptId = prompt(
+        "Enter Department ID:\n1011 - IT\n1012 - Sales\n1013 - HR\n1014 - Finance\n1015 - Marketing",
+        employee.deptId
+    );
 
+    if (deptId === null) return;
 
-    if (!name || name.trim() === "") {
-        return;
-    }
+    const salary = prompt(
+        "Enter Salary:",
+        employee.salary
+    );
 
-
-    const deptId =
-        Number(
-            prompt(
-                "Enter Department ID:\n\n" +
-                "1011 - IT\n" +
-                "1012 - Sales\n" +
-                "1013 - HR\n" +
-                "1014 - Finance\n" +
-                "1015 - Marketing",
-
-                employee.deptId
-            )
-        );
-
-
-    if (!isValidDepartment(deptId)) {
-
-        alert("Invalid Department ID.");
-
-        return;
-    }
-
-
-    const salary =
-        Number(
-            prompt(
-                "Enter Salary:",
-                employee.salary
-            )
-        );
-
-
-    if (!salary || salary < 0) {
-
-        alert("Invalid salary.");
-
-        return;
-    }
-
+    if (salary === null) return;
 
     const updatedEmployee = {
-
-        empId: id,
-
-        name: name.trim(),
-
-        deptId: deptId,
-
-        salary: salary
+        name: name,
+        deptId: Number(deptId),
+        salary: Number(salary)
     };
 
-
     try {
+        showLoading(true);
 
         const response = await fetch(
             `${API_URL}/employees/${id}`,
             {
                 method: "PUT",
-
                 headers: {
                     "Content-Type": "application/json"
                 },
-
                 body: JSON.stringify(updatedEmployee)
             }
         );
 
+        const result = await response.json();
 
         if (!response.ok) {
-
             throw new Error(
-                "Failed to update employee"
+                result.message || "Unable to update employee"
             );
         }
 
-
-        alert(
-            "Employee details updated successfully."
-        );
-
+        alert("Employee updated successfully!");
 
         await loadEmployees();
 
-
     } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "Unable to update employee. Check the backend."
-        );
+        showError(error.message);
+    } finally {
+        showLoading(false);
     }
 }
 
