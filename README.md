@@ -55,11 +55,11 @@ The initial implementation was developed using a procedural approach. The next s
 * [x] STL
 * [x] File handling
 * [x] CSV file handling
-* [ ] Classes and Objects
-* [ ] Encapsulation
-* [ ] Constructors
-* [ ] Inheritance
-* [ ] Polymorphism
+* [x] Classes and Objects
+* [x] Encapsulation
+* [x] Constructors
+* [x] Inheritance
+* [x] Polymorphism
 
 ---
 
