@@ -365,30 +365,21 @@ async function editEmployee(id) {
 // ==========================================
 
 async function deleteEmployee(id) {
-
-    const employee =
-        employees.find(
-            employee => employee.empId === id
-        );
-
+    const employee = employees.find(emp => emp.empId === id);
 
     if (!employee) {
+        showError("Employee not found");
         return;
     }
 
+    const confirmed = confirm(
+        `Are you sure you want to delete ${employee.name}?`
+    );
 
-    const confirmation =
-        confirm(
-            `Are you sure you want to delete ${employee.name}?`
-        );
-
-
-    if (!confirmation) {
-        return;
-    }
-
+    if (!confirmed) return;
 
     try {
+        showLoading(true);
 
         const response = await fetch(
             `${API_URL}/employees/${id}`,
@@ -397,30 +388,22 @@ async function deleteEmployee(id) {
             }
         );
 
+        const result = await response.json();
 
         if (!response.ok) {
-
             throw new Error(
-                "Failed to delete employee"
+                result.message || "Unable to delete employee"
             );
         }
 
-
-        alert(
-            "Employee deleted successfully."
-        );
-
+        alert("Employee deleted successfully!");
 
         await loadEmployees();
 
-
     } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "Unable to delete employee. Check the backend."
-        );
+        showError(error.message);
+    } finally {
+        showLoading(false);
     }
 }
 

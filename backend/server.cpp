@@ -216,6 +216,43 @@ server.Put(R"(/employees/(\d+))",
     }
 );
 
+// DELETE - Delete employee
+server.Delete(R"(/employees/(\d+))",
+    [&](const httplib::Request& req, httplib::Response& res) {
+
+        try {
+            int empId = stoi(req.matches[1]);
+
+            if (!manager.deleteEmployee(empId)) {
+                res.status = 404;
+
+                res.set_content(
+                    "{\"success\":false,\"message\":\"Employee not found\"}",
+                    "application/json"
+                );
+
+                return;
+            }
+
+            res.status = 200;
+
+            res.set_content(
+                "{\"success\":true,\"message\":\"Employee deleted successfully\"}",
+                "application/json"
+            );
+
+        } catch (...) {
+
+            res.status = 400;
+
+            res.set_content(
+                "{\"success\":false,\"message\":\"Invalid employee ID\"}",
+                "application/json"
+            );
+        }
+    }
+);
+
     cout << "Employee Management API running...\n";
     cout << "Server: http://localhost:8080\n";
 
